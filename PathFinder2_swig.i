@@ -10,4 +10,3 @@ namespace std {
 
 std::vector<int> parse_string_to_weights(std::string s);
 std::vector<int> get_path(const int height, const int width, std::vector<int>& weights, const int blocker_cutoff, const int start, const int exit, bool diagonal_ok);
-std::vector<int> parse_string_to_weights(std::string s);

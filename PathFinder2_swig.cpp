@@ -1,5 +1,3 @@
-//https://www.codewars.com/kata/57658bfa28ed87ecfa00058a/train/cpp
-
 #include "PathFinder2_swig.h"
 
 #include <vector>
@@ -12,9 +10,6 @@
 #include <unordered_map>
 #include <algorithm>
 
-
-
-#define LOG(x) std::cout << x
 
 std::ostream& operator<<(std::ostream& ostream, const std::pair<int, int>& pair)
 {
