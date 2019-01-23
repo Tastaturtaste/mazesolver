@@ -13,3 +13,7 @@ In cmd:
 
 3. g++ -shared PathFinder2_swig_wrap.o PathFinder2_swig.o -o _pathfinder.pyd -L"Path/to/python/libs" -l"pythonxx.lib"
 	output: _pathfinder.pyd
+
+SWIG: 	http://www.swig.org/download.html
+PYTHON: https://www.python.org/
+MINGW:	https://osdn.net/projects/mingw/releases/
