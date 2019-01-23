@@ -33,7 +33,7 @@ def solve_maze(maze_path, solution_path, diagonal_ok = False):
 
     # end is the first white block in the final column
     end_i, = np.where(grid[:, -1] == 1)
-    end = np.array([end_i[0], grid.shape[0] - 1])
+    end = np.array([end_i[0], grid.shape[1] - 1])
 
     t0 = time()
     # set diagonal_ok=True to enable 8-connectivity

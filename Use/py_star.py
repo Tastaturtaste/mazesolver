@@ -15,7 +15,7 @@ def a_star(weights, blocker_cutoff, start, goal, diagonal_ok = False):
     
     #Ensure goal is within grid
     if(goal[0] < 0 or goal[1] >= weights.shape[0] or goal[1] < 0 or goal[1] >= weights.shape[1]):
-        raise ValueError("Start of ({0}) lies outside grid.".format(goal))
+        raise ValueError("Goal of ({0}) lies outside grid.".format(goal))
 
     height, width = weights.shape
     start_index = int(np.ravel_multi_index(start, (height, width)))
