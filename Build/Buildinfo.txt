@@ -11,8 +11,10 @@ In cmd:
 -D_hypot=hypot is a define-statement necessary, because of a nameclash between python.h and cmath.h
 
 
-3. g++ -shared PathFinder2_swig_wrap.o PathFinder2_swig.o -o _pathfinder.pyd -L"Path/to/python/libs" -l"pythonxx.lib"
+3. g++ -shared PathFinder2_swig_wrap.o PathFinder2_swig.o -o _pathfinder.pyd -L"Path/to/python/libs" -l"pythonxx"
 	output: _pathfinder.pyd
+	
+pythonxx should be the name of the pythonlib, for example python37, without file ending
 
 SWIG: 	http://www.swig.org/download.html
 PYTHON: https://www.python.org/
