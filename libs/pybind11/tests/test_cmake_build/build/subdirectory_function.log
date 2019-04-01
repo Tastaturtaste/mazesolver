@@ -1,0 +1,14 @@
+[OUTPUT] 
+Internal cmake changing into directory: C:/dev/Librarys/pybind11-master/tests/test_cmake_build/build/subdirectory_function
+Error: cmake execution failed
+Configuring
+CMake Error at CMakeLists.txt:5 (pybind11_add_module):
+  Unknown CMake command "pybind11_add_module".
+
+
+Configuring
+Configuring
+Configuring incomplete, errors occurred!
+See also "C:/dev/Librarys/pybind11-master/tests/test_cmake_build/build/subdirectory_function/CMakeFiles/CMakeOutput.log".
+
+
