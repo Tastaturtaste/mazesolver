@@ -1,4 +1,5 @@
 **/*.vs
 **/__*__
+__pycache__/
 **/solutions/*.png
-**/pathfinder/build/*
+**/pathfinder/build/
