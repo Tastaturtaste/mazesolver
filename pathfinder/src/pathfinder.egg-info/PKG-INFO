@@ -1,8 +1,8 @@
 Metadata-Version: 1.0
 Name: pathfinder
-Version: 0.0.0
-Summary: UNKNOWN
-Home-page: UNKNOWN
+Version: 0.8
+Summary: Implementation of an a*-algorithm in c++
+Home-page: https://github.com/Tastaturtaste/a_star/tree/pybind/pathfinder
 Author: UNKNOWN
 Author-email: UNKNOWN
 License: UNKNOWN

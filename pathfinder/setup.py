@@ -67,8 +67,11 @@ ext_modules = [
 
 setup(
   name             = 'pathfinder',
+  version           = '0.8',
+  description       = 'Implementation of an a*-algorithm in c++',
+  url               = 'https://github.com/Tastaturtaste/a_star/tree/pybind/pathfinder',
   ext_modules      = ext_modules,
-  packages=find_packages('src'),
+  packages=find_packages(),
   package_dir={'':'src'},
   install_requires = ['pybind11>=2.2.0'],
   cmdclass         = {'build_ext': BuildExt},
