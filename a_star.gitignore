@@ -1,0 +1,4 @@
+**/*.vs
+**/__*__
+**/solutions/*.png
+**/pathfinder/build/*
