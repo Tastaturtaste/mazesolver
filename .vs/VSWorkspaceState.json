@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\libs",
+    "\\libs\\pybind11",
+    "\\libs\\pybind11\\include",
+    "\\libs\\pybind11\\include\\pybind11",
+    "\\pathfinder\\libs",
+    "\\pathfinder\\libs\\pybind11\\tests",
+    "\\pathfinder\\src",
+    "\\Use"
+  ],
+  "SelectedNode": "\\Use\\py_star.py",
+  "PreviewInSolutionExplorer": false
+}
