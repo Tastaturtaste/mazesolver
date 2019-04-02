@@ -1,4 +1,6 @@
 **/*.vs
 **/__*__/
 **/solutions/*.png
-**/pathfinder/build/
+**/build/
+dist/
+**/*.spec
