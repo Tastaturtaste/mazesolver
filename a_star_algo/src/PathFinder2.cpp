@@ -1,4 +1,11 @@
+/*cppimport
+<%
+setup_pybind11(cfg)
+%>
+*/
+
 #include "PathFinder2.h"
+#include "..\util\Timer.h"
 
 #include <vector>
 #include <queue>
@@ -11,25 +18,21 @@
 #include <algorithm>
 
 
+#include "pybind11/pybind11.h"
+#include "pybind11/stl.h"
+#include "PathFinder2.h"
+
+
 std::ostream& operator<<(std::ostream& ostream, const std::pair<int, int>& pair)
 {
 	ostream << '{' << pair.first << ", " << pair.second << '}';
 	return ostream;
 }
 
-Node::Node(int index, int sure_cost)
-		: m_index(index), m_sure_cost(sure_cost)
-		{}
-	
-struct CompareIndex {
-	bool operator()(const Node& left, const Node& right) const { return left.m_index < right.m_index; }
-};
+Node::Node(int index, double sure_cost)
+		: m_index(index), m_sure_cost(sure_cost) {}
 
-struct ComparePriority {
-	bool operator()(const Node& left, const Node& right) const {return static_cast<float>(left.m_sure_cost) + left.m_heuristic_cost > static_cast<float>(right.m_sure_cost) + right.m_heuristic_cost;}
-};
-
-float heuristic_cost(const int node1_y, const int node2_y, const int node1_x, const int node2_x, bool diagonal_ok)
+double heuristic_cost(const int node1_y, const int node2_y, const int node1_x, const int node2_x, bool diagonal_ok)
 {
 	return diagonal_ok ? sqrt(std::pow(node1_x - node2_x, 2) + std::pow(node1_y - node2_y, 2)) : std::abs(node1_x - node2_x) + std::abs(node1_y - node2_y);
 }
@@ -39,7 +42,7 @@ const bool closed_contains(const std::set<Node, CompareIndex>& set, const Node& 
 	return set.find(element) != set.end();
 }
 
-void expandNode(const Node& currentNode, const int exit, t_openlist& openlist, t_closedlist& closedlist, const int height, const int width, std::vector<int>& weights, const int blocker_cutoff, std::vector<int>& costs, std::unordered_map<int, int>& connections, const bool diagonal_ok)
+void expandNode(const Node& currentNode, const int exit, t_openlist& openlist, t_closedlist& closedlist, const int height, const int width, std::vector<int>& weights, const int blocker_cutoff, std::vector<double>& costs, std::unordered_map<int, int>& connections, const bool diagonal_ok)
 {
 	std::vector<Node> neighbors;
 
@@ -81,27 +84,31 @@ void expandNode(const Node& currentNode, const int exit, t_openlist& openlist, t
 
 std::vector<int> get_path(const int height, const int width, std::vector<int>& weights, const int blocker_cutoff, const int start, const int exit, bool diagonal_ok)
 {
+	std::cout << "Calculating path...\n";
 	t_openlist openlist;
 	t_closedlist closedlist;
 	bool found_path = false;
 	Node start_node(start, 0);
 	Node end_node(exit, 0);
 	std::unordered_map<int, int> connections; // connections[node_index] == previous_node_index
-	std::vector<int> costs(width*height, std::numeric_limits<int>::max());
+	std::vector<double> costs(width*height, std::numeric_limits<double>::max());
 
 	openlist.push(start_node);
-	while (openlist.size() > 0)
 	{
-		Node currentNode = openlist.top();
-		openlist.pop();
-		if (currentNode.m_index == exit)
+		Timer timer("get_path hot loop");
+		while (openlist.size() > 0)
 		{
-			found_path = true;
-			break;
-		}
+			Node currentNode = openlist.top();
+			openlist.pop();
+			if (currentNode.m_index == exit)
+			{
+				found_path = true;
+				break;
+			}
 
-		closedlist.insert(currentNode);
-		expandNode(currentNode, exit, openlist, closedlist, height, width, weights, blocker_cutoff, costs, connections, diagonal_ok);
+			closedlist.insert(currentNode);
+			expandNode(currentNode, exit, openlist, closedlist, height, width, weights, blocker_cutoff, costs, connections, diagonal_ok);
+		}
 	}
 	if (!found_path)
 		return {};
@@ -127,4 +134,19 @@ std::vector<int> parse_string_to_weights(std::string s)
 		if (s[i] == '.') weights[i] = 1;
 	}
 	return weights;
+}
+
+namespace py = pybind11;
+
+
+PYBIND11_MODULE(a_star_algo, m)
+{
+	m.doc() = R"docstring(
+			This module exposes only one function named get_path.)docstring";
+	m.def("get_path", &get_path, R"docstring(
+			Searches for the best path from start to finish
+			using an a*-algorithm.)docstring",
+		py::arg("height"), py::arg("width"), py::arg("weights"), py::arg("blocker_cutoff"),
+		py::arg("start"), py::arg("exit"), py::arg("diagonal_ok")
+	);
 }

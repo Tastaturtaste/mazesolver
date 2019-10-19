@@ -2,7 +2,7 @@ import numpy as np
 
 import inspect
 from os.path import abspath, dirname, join
-from pathfinder import get_path
+import a_star_algo
 
 def a_star(weights, blocker_cutoff, start, goal, diagonal_ok = False):
     # every weight has to be at least one
@@ -26,7 +26,7 @@ def a_star(weights, blocker_cutoff, start, goal, diagonal_ok = False):
 
 def invoke_pathfinder(height,width,weights,blocker_cutoff,start_index,goal_index,diagonal_ok):
     #Invoking C++ stuff here
-    path = get_path(height, width, weights, blocker_cutoff, start_index, goal_index, diagonal_ok)
+    path = a_star_algo.get_path(height, width, weights, blocker_cutoff, start_index, goal_index, diagonal_ok)
     path = np.unravel_index(path, (height,width))
     #If no path was found returns an empty tuple, otherwise tuple of path indices
     return path

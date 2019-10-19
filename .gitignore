@@ -1,6 +1,9 @@
 **/*.vs
 **/__*__/
-**/solutions/*.png
+**/Solutions/*.png
 **/build/
 dist/
 **/*.spec
+python_env
+**/x64
+**/x32

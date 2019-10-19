@@ -56,7 +56,7 @@ class BuildExt(build_ext):
 ext_modules = [
   Extension(
     'pathfinder',
-    sources=['src/pathfinder/PathFinder2.cpp', 'src/pathfinder/pathfinder.cpp'],
+    sources=['src/pathfinder/PathFinder2.cpp'],
     include_dirs=[
       "libs/pybind11/include/",
     ],
