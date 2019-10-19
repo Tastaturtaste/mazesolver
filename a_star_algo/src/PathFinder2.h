@@ -15,7 +15,7 @@ public:
 	int m_index; // {y,x}
 	double m_sure_cost;
 	double m_heuristic_cost;
-	Node(int index, double sure_cost);
+	Node(int index, double sure_cost) : m_index(index), m_sure_cost(sure_cost) {};
 	inline double get_combined_cost() const { return m_sure_cost + m_heuristic_cost; }
 };
 
@@ -33,11 +33,12 @@ using t_closedlist = std::set<Node, CompareIndex>;
 
 double heuristic_cost(const int node1_y, const int node2_y, const int node1_x, const int node2_x, bool diagonal_ok = false);
 
-
 const bool closed_contains(const std::set<Node>& set, const Node& element);
 
-void expandNode(const Node& currentNode, const int exit, t_openlist& openlist, t_closedlist& closedlist, const int height, const int width, std::vector<int>& weights, const int blocker_cutoff, std::vector<int>& costs, std::unordered_map<int, int>& connections, const bool diagonal_ok);
-
+namespace old_slow_impl {
+	std::vector<int> get_path(const int height, const int width, std::vector<int>& weights, const int blocker_cutoff, const int start, const int exit, bool diagonal_ok);
+	void expandNode(const Node& currentNode, const int exit, t_openlist& openlist, t_closedlist& closedlist, const int height, const int width, std::vector<int>& weights, const int blocker_cutoff, std::vector<int>& costs, std::unordered_map<int, int>& connections, const bool diagonal_ok);
+}
 std::vector<int> get_path(const int height, const int width, std::vector<int>& weights, const int blocker_cutoff, const int start, const int exit, bool diagonal_ok);
 
 std::vector<int> parse_string_to_weights(std::string s);
