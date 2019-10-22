@@ -24,7 +24,7 @@ def solve_maze(maze_path, solution_path, diagonal_ok = False):
         print("loaded maze of shape {0}".format(maze.shape[0:2],))
 
     grid = cv2.cvtColor(maze, cv2.COLOR_BGR2GRAY).astype(np.int)
-    grid[grid == 0] = np.iinfo(np.int32).max
+    grid[grid == 0] = -1#np.iinfo(np.int32).max
     grid[grid == 255] = 1
 
     # start is the first white block in the top row
@@ -36,7 +36,7 @@ def solve_maze(maze_path, solution_path, diagonal_ok = False):
     end = np.array([end_i[0], grid.shape[1] - 1])
     t0 = time()
     # set diagonal_ok=True to enable 8-connectivity
-    path = a_star(grid,np.iinfo(np.int32).max, start, end, False)
+    path = a_star(grid, start, end, False)
     dur = time() - t0
 
     if len(path[0]) > 0:

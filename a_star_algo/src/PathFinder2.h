@@ -7,38 +7,34 @@
 #include <string>
 #include <iostream>
 #include <unordered_map>
+#include <unordered_set>
+#include <cmath>
 
 std::ostream& operator<<(std::ostream& ostream, const std::pair<int, int>& pair);
 
-class Node {
-public:
-	int m_index; // {y,x}
-	double m_sure_cost;
-	double m_heuristic_cost;
-	Node(int index, double sure_cost) : m_index(index), m_sure_cost(sure_cost) {};
-	inline double get_combined_cost() const { return m_sure_cost + m_heuristic_cost; }
+struct Node {
+	int index{};
+	double sure_cost{};
+	double heuristic_cost{};
+	double combined_cost{};
+	Node const* parent{ nullptr };
 };
+
+inline double combined_cost(const Node& node) noexcept { return node.sure_cost + node.heuristic_cost; }
 
 struct CompareIndex {
-	bool operator()(const Node& left, const Node& right) const { return left.m_index < right.m_index; }
+	bool operator()(const Node& left, const Node& right) const noexcept { return left.index < right.index; }
 };
 
-// < is faster, don't know why
-struct ComparePriority {
-	bool operator()(const Node& left, const Node& right) const { return left.get_combined_cost() > right.get_combined_cost(); }
-};
+template<typename PriorityComparator>
+using t_openlist = std::set<Node const *, PriorityComparator>;
+using t_closedlist = std::unordered_set<Node const *>;
 
-using t_openlist = std::priority_queue<Node, std::vector<Node>, ComparePriority>;
-using t_closedlist = std::set<Node, CompareIndex>;
+std::tuple<std::vector<int>, std::vector<int>> get_path(int const width, int const height, std::vector<double> const costs, const int start_index, const int exit_index, bool const diagonal_ok);
 
-double heuristic_cost(const int node1_y, const int node2_y, const int node1_x, const int node2_x, bool diagonal_ok = false);
-
-const bool closed_contains(const std::set<Node>& set, const Node& element);
-
-namespace old_slow_impl {
-	std::vector<int> get_path(const int height, const int width, std::vector<int>& weights, const int blocker_cutoff, const int start, const int exit, bool diagonal_ok);
-	void expandNode(const Node& currentNode, const int exit, t_openlist& openlist, t_closedlist& closedlist, const int height, const int width, std::vector<int>& weights, const int blocker_cutoff, std::vector<int>& costs, std::unordered_map<int, int>& connections, const bool diagonal_ok);
-}
-std::vector<int> get_path(const int height, const int width, std::vector<int>& weights, const int blocker_cutoff, const int start, const int exit, bool diagonal_ok);
+//namespace old_slow_impl {
+//	std::vector<int> get_path(const int height, const int width, std::vector<int>& weights, const int blocker_cutoff, const int start, const int exit, bool diagonal_ok);
+//	void expandNode(const Node& currentNode, const int exit, t_openlist& openlist, t_closedlist& closedlist, const int height, const int width, std::vector<int>& weights, const int blocker_cutoff, std::vector<int>& costs, std::unordered_map<int, int>& connections, const bool diagonal_ok);
+//}
 
 std::vector<int> parse_string_to_weights(std::string s);

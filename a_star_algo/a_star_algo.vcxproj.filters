@@ -24,6 +24,9 @@
     <ClInclude Include="util\Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Openlist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\PathFinder2.cpp">
