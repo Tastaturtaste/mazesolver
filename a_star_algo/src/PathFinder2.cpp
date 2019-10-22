@@ -22,6 +22,8 @@ setup_pybind11(cfg)
 #include "pybind11/stl.h"
 #include "PathFinder2.h"
 
+#define OPENLIST
+
 std::ostream& operator<<(std::ostream& ostream, const std::pair<int, int>& pair)
 {
 	ostream << '{' << pair.first << ", " << pair.second << '}';
@@ -29,9 +31,12 @@ std::ostream& operator<<(std::ostream& ostream, const std::pair<int, int>& pair)
 }
 
 template<typename T>
-double heuristic_cost(const std::pair<T,T> node_1, const std::pair<T,T> node_2)
+double heuristic_cost(const std::pair<T,T> node_1, const std::pair<T,T> node_2, bool diagonal_ok)
 {
-	return sqrt(std::pow(node_1.first - node_2.first, 2) + std::pow(node_1.second - node_2.second, 2));
+	if (diagonal_ok)
+		return sqrt(std::pow(node_1.first - node_2.first, 2) + std::pow(node_1.second - node_2.second, 2));
+	else
+		return std::abs(node_1.first - node_2.first) + std::abs(node_1.second - node_2.second);
 }
 
 std::pair<int, int> pos_from_index(int index, int width) {
@@ -47,7 +52,8 @@ inline bool is_valid(int x, int y, int width, int height, std::vector<double> co
 //	return set.find(element) != set.end();
 //}
 
-std::vector<int> set_to_vec(std::unordered_set<Node const*> set) {
+template<class Container>
+std::vector<int> set_to_vec(Container set) {
 	std::vector<int> vec;
 	vec.reserve(set.size());
 	std::for_each(set.begin(), set.end(), [&vec](Node const* node) {vec.push_back(node->index); });
@@ -55,6 +61,7 @@ std::vector<int> set_to_vec(std::unordered_set<Node const*> set) {
 }
 
 std::vector<int> construct_path(Node const* const start, Node const* const exit, size_t approx_path_length){
+	Timer timer("construction of path");
 	std::vector<int> path{exit->index};
 	path.reserve(approx_path_length);
 	Node const * current = exit;
@@ -90,11 +97,9 @@ std::tuple<std::vector<int>, std::vector<int>> get_path(int const width, int con
 	Node const* const start_node = &(node_map[start_pos.first][start_pos.second]);
 
 	node_map[start_pos.first][start_pos.second].sure_cost = 0.0;
-	node_map[start_pos.first][start_pos.second].heuristic_cost = heuristic_cost(start_pos, exit_pos);
+	node_map[start_pos.first][start_pos.second].heuristic_cost = heuristic_cost(start_pos, exit_pos, diagonal_ok);
 	node_map[start_pos.first][start_pos.second].combined_cost = start_node->sure_cost + start_node->heuristic_cost;
 	node_map[start_pos.first][start_pos.second].parent = start_node;
-	exit_node->sure_cost = 0.0;
-
 
 	struct CompareHeuristic {
 		bool operator()(const Node * const left, const Node * const right) const { return left->heuristic_cost > right->heuristic_cost; }
@@ -102,23 +107,37 @@ std::tuple<std::vector<int>, std::vector<int>> get_path(int const width, int con
 	struct CompareCost {
 		bool operator()(const Node* const left, const Node* const right) const { return left->combined_cost > right->combined_cost; }
 	};
-
-	Openlist<Node const *, CompareCost> openlist_new;
-	//t_openlist<CompareCost> openlist; 
-	
-	//openlist.insert(&(node_map[start_pos.first][start_pos.second]));
-	openlist_new.push(&(node_map[start_pos.first][start_pos.second]));
+	#ifdef SET
+	t_openlist<CompareCost> openlist(CompareCost{});
+	#else
+	Openlist<Node const*, CompareCost> openlist_new;
+	openlist_new.reserve((width + height) / 2 * 5);
+	#endif
 	t_closedlist closedlist;
-	closedlist.reserve(width + height);
+	
+	#ifdef SET
+	openlist.insert(&(node_map[start_pos.first][start_pos.second]));
+	#else
+	openlist_new.push(&(node_map[start_pos.first][start_pos.second]));
+	#endif
 	{
 		Timer timer("Hot loop");
-		while (!openlist_new.empty()) {
-			Node const* const current = openlist_new.pop();//*(openlist.begin());
-			//openlist.erase(current);
-			
-			if (current->index == exit_index) {
+		while (	
+			#ifdef SET 
+			!openlist.empty()
+			#else 
+			!openlist_new.empty()
+			#endif
+			){
+			Node const* const current = 
+			#ifdef SET
+				* (openlist.begin()); openlist.erase(current);
+			#else
+				openlist_new.pop();
+			#endif
+			if (current == exit_node) {
 				std::cout << "Exit found! \n";
-				return { { construct_path(start_node,exit_node,(width + height) * 2) }, set_to_vec(closedlist) };
+				return { { construct_path(start_node,exit_node,(width + height) * 2) }, set_to_vec<decltype(closedlist)>(closedlist) };
 			}
 			auto cur_pos = pos_from_index(current->index, width);
 			int x{ cur_pos.first }, y{ cur_pos.second };
@@ -133,14 +152,21 @@ std::tuple<std::vector<int>, std::vector<int>> get_path(int const width, int con
 					if ((&neighbor == current) || (closedlist.find(&neighbor) != closedlist.end()))
 						continue;
 					double new_sure_cost = current->sure_cost + costs[neighbor.index];
-					if (new_sure_cost < neighbor.sure_cost || &neighbor == exit_node) {
-						openlist_new.erase(&neighbor);
+					if (new_sure_cost <= neighbor.sure_cost || &neighbor == exit_node){
+						#ifdef SET
+						openlist.erase(&neighbor);
+						#else
+						openlist_new.erase(&neighbor);	//Biggest Performance bottleneck with 62% time spend here on small_maze
+						#endif
 						neighbor.sure_cost = new_sure_cost;
-						neighbor.heuristic_cost = heuristic_cost(pos_from_index(neighbor.index, width), exit_pos);
+						neighbor.heuristic_cost = heuristic_cost(pos_from_index(neighbor.index, width), exit_pos, diagonal_ok);
 						neighbor.combined_cost = neighbor.sure_cost + neighbor.heuristic_cost;
 						neighbor.parent = current;
-						//openlist.insert(&neighbor);
+						#ifdef SET
+						openlist.insert(&neighbor);
+						#else
 						openlist_new.push(&neighbor);
+						#endif
 					}
 				}
 			}

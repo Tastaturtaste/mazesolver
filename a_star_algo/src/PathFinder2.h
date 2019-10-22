@@ -28,7 +28,7 @@ struct CompareIndex {
 
 template<typename PriorityComparator>
 using t_openlist = std::set<Node const *, PriorityComparator>;
-using t_closedlist = std::unordered_set<Node const *>;
+using t_closedlist = std::set<Node const *>;
 
 std::tuple<std::vector<int>, std::vector<int>> get_path(int const width, int const height, std::vector<double> const costs, const int start_index, const int exit_index, bool const diagonal_ok);
 

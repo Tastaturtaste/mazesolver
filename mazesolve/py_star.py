@@ -4,7 +4,7 @@ import inspect
 from os.path import abspath, dirname, join
 import a_star_algo
 
-def a_star(weights, start, goal, diagonal_ok = False):
+def a_star(weights, start, goal, diagonal_ok):
     # every weight has to be at least one
     #if weights.min(axis=None) < 1:
     #    raise ValueError("Minimum cost to move must be 1, but got {0}".format(weights.min(axis=None)))
@@ -21,16 +21,16 @@ def a_star(weights, start, goal, diagonal_ok = False):
     start_index = int(np.ravel_multi_index(start, (height, width)))
     goal_index = int(np.ravel_multi_index(goal, (height, width)))
     weights = weights.flatten()
-    path = invoke_pathfinder(width,height,weights,start_index,goal_index,diagonal_ok)
-    return path
+    weights[start_index] = 0.0;
+    weights[goal_index] = 0.0;
+    path, tried_pixels = invoke_pathfinder(width,height,weights,start_index,goal_index,diagonal_ok)
+    return (path,tried_pixels)
 
 def invoke_pathfinder(width,height,weights,start_index,goal_index,diagonal_ok):
     #Invoking C++ stuff here
-    path = a_star_algo.get_path(width, height, weights, start_index, goal_index, diagonal_ok)
-    if path[0][0] > 0:
-        print("printing path... \n")
-        return np.unravel_index(path[0], (height,width))
+    path, tried_pixels = a_star_algo.get_path(width, height, weights, start_index, goal_index, diagonal_ok)
+    if path[0] >= 0:
+        return (np.unravel_index(path, (height,width)),np.unravel_index(tried_pixels,(height,width)))
     else:
-        print("printing tried pixels... \n")
-        return np.unravel_index(path[1],(height,width))
+        return (None,np.unravel_index(tried_pixels,(height,width)))
     #If no path was found returns an empty tuple, otherwise tuple of path indices

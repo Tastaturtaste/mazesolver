@@ -14,10 +14,10 @@ public:
 	}
 	void push(T const& val) {
 		container.push_back(val);
-		std::push_heap(container.begin(), container.end());
+		std::push_heap(container.begin(), container.end(),comp);
 	}
 	T pop() {
-		std::pop_heap(container.begin(), container.end());
+		std::pop_heap(container.begin(), container.end(),comp);
 		T val = container.back();
 		container.pop_back();
 		return val;

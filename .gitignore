@@ -7,3 +7,4 @@ dist/
 python_env
 **/x64
 **/x32
+**/*.pyperf
