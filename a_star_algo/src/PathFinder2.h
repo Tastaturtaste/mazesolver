@@ -13,11 +13,13 @@
 std::ostream& operator<<(std::ostream& ostream, const std::pair<int, int>& pair);
 
 struct Node {
-	int index{};
-	double sure_cost{};
-	double heuristic_cost{};
-	double combined_cost{};
-	Node const* parent{ nullptr };
+	int index;
+	bool open;
+	bool closed;
+	double sure_cost;
+	double heuristic_cost;
+	double combined_cost;
+	Node const* parent;
 };
 
 inline double combined_cost(const Node& node) noexcept { return node.sure_cost + node.heuristic_cost; }
@@ -28,13 +30,7 @@ struct CompareIndex {
 
 template<typename PriorityComparator>
 using t_openlist = std::set<Node const *, PriorityComparator>;
-using t_closedlist = std::set<Node const *>;
 
-std::tuple<std::vector<int>, std::vector<int>> get_path(int const width, int const height, std::vector<double> const costs, const int start_index, const int exit_index, bool const diagonal_ok);
-
-//namespace old_slow_impl {
-//	std::vector<int> get_path(const int height, const int width, std::vector<int>& weights, const int blocker_cutoff, const int start, const int exit, bool diagonal_ok);
-//	void expandNode(const Node& currentNode, const int exit, t_openlist& openlist, t_closedlist& closedlist, const int height, const int width, std::vector<int>& weights, const int blocker_cutoff, std::vector<int>& costs, std::unordered_map<int, int>& connections, const bool diagonal_ok);
-//}
+std::tuple<std::vector<int>, std::vector<int>> get_path(int width, int height, std::vector<double> costs, int start_index, int exit_index, bool const diagonal_ok);
 
 std::vector<int> parse_string_to_weights(std::string s);

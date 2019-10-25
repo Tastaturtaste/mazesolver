@@ -18,4 +18,5 @@ public:
 		auto duration = end - begin;
 		std::cout << name << " took " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "ms to run\n";
 	}
+	inline std::chrono::milliseconds get_duration() const { return std::chrono::duration_cast<std::chrono::milliseconds>(end - begin); }
 };
