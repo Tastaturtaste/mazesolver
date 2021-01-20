@@ -2,9 +2,11 @@
 **/__*__/
 **/Solutions/*.png
 **/build/
-dist/
+**/dist/
 **/*.spec
-python_env
-**/x64
-**/x32
+**/venv
+**/env
+**/bin
+**/temp
 **/*.pyperf
+**/.vscode

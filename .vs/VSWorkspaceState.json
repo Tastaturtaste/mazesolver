@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\a_star_algo",
+    "\\a_star_algo\\src"
   ],
-  "SelectedNode": "\\mazes",
+  "SelectedNode": "\\a_star_algo\\src\\PathFinder2.cpp",
   "PreviewInSolutionExplorer": false
 }

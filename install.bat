@@ -1,1 +1,0 @@
-pip install pathfinder/dist/pathfinder-0.8-cp37-cp37m-win32.whl
