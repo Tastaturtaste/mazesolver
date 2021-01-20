@@ -5,8 +5,10 @@ from time import time
 from os.path import basename, join, splitext, abspath, dirname
 
 def main():
-    maze_name = input("Please enter the name of the maze picture with ending: ")
-    diagonal_ok = input("Is traveling diagonally allowed? : ")
+    #maze_name = input("Please enter the name of the maze picture with ending: ")
+    maze_name = "Sketch.png"
+    #diagonal_ok = input("Is traveling diagonally allowed? : ")
+    diagonal_ok = False
     if diagonal_ok == "yes":
         diagonal_ok = True
     elif diagonal_ok == "no":

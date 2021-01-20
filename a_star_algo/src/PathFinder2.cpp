@@ -170,6 +170,7 @@ std::tuple<std::vector<int>, std::vector<int>> get_path(int width, int height, s
 			!openlist_new.empty()
 			#endif
 			){
+			std::cout << "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b" << closedlist.size() << " of " << costs.size() << " discarded";
 			Node const* const current = 
 			#ifdef SET
 				* (openlist.begin()); openlist.erase(openlist.begin());
@@ -197,8 +198,8 @@ std::tuple<std::vector<int>, std::vector<int>> get_path(int width, int height, s
 						continue;
 					double new_sure_cost = current->sure_cost + costs[neighbor.index];
 					if (new_sure_cost <= neighbor.sure_cost || &neighbor == exit_node) {
-						#ifdef SET
 						if (neighbor.open) {
+							#ifdef SET
 							openlist.erase(&neighbor);
 							#else
 							openlist_new.erase(&neighbor);	//Biggest Performance bottleneck with 62% time spend here on small_maze

@@ -10,3 +10,4 @@
 **/temp
 **/*.pyperf
 **/.vscode
+**/*.user
