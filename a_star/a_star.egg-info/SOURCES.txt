@@ -1,8 +1,0 @@
-pyproject.toml
-setup.py
-a_star.egg-info/PKG-INFO
-a_star.egg-info/SOURCES.txt
-a_star.egg-info/dependency_links.txt
-a_star.egg-info/not-zip-safe
-a_star.egg-info/top_level.txt
-src/a_star.cpp

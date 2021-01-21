@@ -43,7 +43,7 @@
     <InterpreterReference Include="Global|PythonCore|3.9" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="a_star_algo.vcxproj">
+    <ProjectReference Include="a_star\a_star.vcxproj">
       <Name>a_star</Name>
       <Project>{4a7cf6c7-7f46-4bc4-a1df-ba49d0d64272}</Project>
       <Private>True</Private>

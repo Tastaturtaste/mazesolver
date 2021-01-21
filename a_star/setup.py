@@ -19,8 +19,8 @@ __version__ = "0.0.1"
 
 ext_modules = [
     Pybind11Extension("a_star",
-        ["src/a_star.cpp"],
-        include_dirs=["src/","src/util/"],
+        ["a_star/src/a_star.cpp"],
+        include_dirs=["a_star/src/","a_star/src/util/"],
         cxx_std=17,
         # Example: passing in the version to the compiled code
         define_macros = [('VERSION_INFO', __version__)],

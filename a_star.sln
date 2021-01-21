@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "a_star", "a_star\a_star_algo.vcxproj", "{4A7CF6C7-7F46-4BC4-A1DF-BA49D0D64272}"
-EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "mazesolve", "mazesolve.pyproj", "{D456AD67-93FC-4B3E-98EA-7E5FAB32A816}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "a_star", "a_star\a_star\a_star.vcxproj", "{4A7CF6C7-7F46-4BC4-A1DF-BA49D0D64272}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +17,12 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D456AD67-93FC-4B3E-98EA-7E5FAB32A816}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D456AD67-93FC-4B3E-98EA-7E5FAB32A816}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D456AD67-93FC-4B3E-98EA-7E5FAB32A816}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D456AD67-93FC-4B3E-98EA-7E5FAB32A816}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D456AD67-93FC-4B3E-98EA-7E5FAB32A816}.Release|x64.ActiveCfg = Release|Any CPU
+		{D456AD67-93FC-4B3E-98EA-7E5FAB32A816}.Release|x86.ActiveCfg = Release|Any CPU
 		{4A7CF6C7-7F46-4BC4-A1DF-BA49D0D64272}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{4A7CF6C7-7F46-4BC4-A1DF-BA49D0D64272}.Debug|x64.ActiveCfg = Debug|x64
 		{4A7CF6C7-7F46-4BC4-A1DF-BA49D0D64272}.Debug|x64.Build.0 = Debug|x64
@@ -27,12 +33,6 @@ Global
 		{4A7CF6C7-7F46-4BC4-A1DF-BA49D0D64272}.Release|x64.Build.0 = Release|x64
 		{4A7CF6C7-7F46-4BC4-A1DF-BA49D0D64272}.Release|x86.ActiveCfg = Release|Win32
 		{4A7CF6C7-7F46-4BC4-A1DF-BA49D0D64272}.Release|x86.Build.0 = Release|Win32
-		{D456AD67-93FC-4B3E-98EA-7E5FAB32A816}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D456AD67-93FC-4B3E-98EA-7E5FAB32A816}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{D456AD67-93FC-4B3E-98EA-7E5FAB32A816}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D456AD67-93FC-4B3E-98EA-7E5FAB32A816}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D456AD67-93FC-4B3E-98EA-7E5FAB32A816}.Release|x64.ActiveCfg = Release|Any CPU
-		{D456AD67-93FC-4B3E-98EA-7E5FAB32A816}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
