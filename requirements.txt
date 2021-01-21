@@ -1,4 +1,0 @@
-numpy==1.19.5
-opencv-python==4.5.1.48
-ptvsd==4.3.2
-pybind11==2.6.1

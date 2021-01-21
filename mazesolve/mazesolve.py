@@ -1,39 +1,20 @@
 import cv2
 import numpy as np
+import argparse as ap
 from py_star import a_star
 from time import time
-from os.path import basename, join, splitext, abspath, dirname
+import os
 
-def main():
-    #maze_name = input("Please enter the name of the maze picture with ending: ")
-    maze_name = "Sketch.png"
-    #diagonal_ok = input("Is traveling diagonally allowed? : ")
-    diagonal_ok = False
-    if diagonal_ok == "yes":
-        diagonal_ok = True
-    elif diagonal_ok == "no":
-        diagonal_ok = False
-    else:
-        print("Invalid input! Write 'yes' or 'no'.")
-        print("Assuming diagonal travel is not allowed.")
-        diagonal_ok = False
-
-    files = parse_filepath(maze_name)
-    solve_maze(files[0], files[1], diagonal_ok)
-
-
-def parse_filepath(maze_name):
-    maze_fpath = join(abspath("mazes"), maze_name)
-    solution_fpath = join(abspath("Solutions"), "{0}_solution.png".format(splitext(basename(maze_fpath))[0]))
-    return [maze_fpath, solution_fpath]
-    
-def solve_maze(maze_path, solution_path, diagonal_ok = False):
+def load_maze(maze_path):
     maze = cv2.imread(maze_path)
     if maze is None:
         print("no file found: {0}".format(maze_path))
         return
     else:
         print("loaded maze of shape {0}".format(maze.shape[0:2],))
+    return maze
+    
+def solve_maze(maze, diagonal_ok = True):
 
     grid = cv2.cvtColor(maze, cv2.COLOR_BGR2GRAY).astype(np.int)
     grid[grid == 0] = -1#np.iinfo(np.int32).max
@@ -50,12 +31,41 @@ def solve_maze(maze_path, solution_path, diagonal_ok = False):
     # set diagonal_ok=True to enable 8-connectivity
     path, tried_pixels = a_star(grid, start, end, diagonal_ok)
     dur = time() - t0
+    return path, tried_pixels, dur
     #path is tuple of two arrays containing x and y values of path nodes
+   
+
+if __name__ == "__main__":
+    parser = ap.ArgumentParser()
+    parser.add_argument("maze_path",type=str)
+    parser.add_argument("--disable-diagonal",action='store_false')
+    parser.add_argument("--solution-name")
+    args = parser.parse_args()
+    maze = load_maze(args.maze_path)
+
+    path_list = args.maze_path.split('/')
+    file_path = "/".join(path_list[:-1])
+    file_name = path_list[-1].split('.')[0]
+    file_ending = path_list[-1].split('.')[-1]
+
+    if args.solution_name:
+        solution_path = args.solution_name
+        if solution_path.count('.') == 0:
+            solution_path = solution_path + '.' + file_ending
+    else:
+        solution_name = file_name + "_solution" + "." + file_ending
+        solution_path = "/".join([file_path,solution_name])
+    
+    solution_dir = "/".join(solution_path.split('/')[:-1])
+    if not os.path.isdir(solution_dir):
+        os.mkdir(solution_dir)
+        
+    path, tried_pixels, dur = solve_maze(maze, args.disable_diagonal)
     if path != None:
-        print("found path of length {0} and expanded {1} nodes in {2}s".format(len(path[0]),len(tried_pixels[0]), dur))
+        print(f"found path of length {len(path[0])} and expanded {len(tried_pixels[0])} nodes in {dur}s")
         maze[tried_pixels] = (0,255,255)
         maze[path] = (0, 0, 255)
-        print("plotting path to {0}".format(solution_path))
+        print(f"plotting path to {solution_path}")
         cv2.imwrite(solution_path, maze)
     else:
         print("no path found")
@@ -64,6 +74,3 @@ def solve_maze(maze_path, solution_path, diagonal_ok = False):
         cv2.imwrite(solution_path, maze)
 
     print("done")
-
-if __name__ == "__main__":
-    main()

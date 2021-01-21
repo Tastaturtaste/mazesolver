@@ -1,7 +1,7 @@
 from setuptools import setup
 
 # Available at setup time due to pyproject.toml
-from pybind11.setup_helpers import Pybind11Extension, build_ext
+from pybind11.setup_helpers import Pybind11Extension
 from pybind11 import get_cmake_dir
 
 import sys
@@ -18,23 +18,23 @@ __version__ = "0.0.1"
 #   reproducible builds (https://github.com/pybind/python_example/pull/53)
 
 ext_modules = [
-    Pybind11Extension("a_star_algo",
-        ["src/PathFinder2.cpp"],
+    Pybind11Extension("a_star",
+        ["src/a_star.cpp"],
         include_dirs=["src/","src/util/"],
+        cxx_std=17,
         # Example: passing in the version to the compiled code
         define_macros = [('VERSION_INFO', __version__)],
         ),
 ]
 
 setup(
-    name="a_star_algo",
+    name="a_star",
     version=__version__,
     author="Joshua Möllers",
-    description="A test project using pybind11",
+    description="A module which exports one function, get_path, to get a optimal path between to positions",
     long_description="",
     ext_modules=ext_modules,
     # Currently, build_ext only provides an optional "highest supported C++
     # level" feature, but in the future it may provide more features.
-    cmdclass={"build_ext": build_ext},
-    zip_safe=False,
+    zip_safe=False
 )

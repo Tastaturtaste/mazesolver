@@ -15,21 +15,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\file_to_vec_parse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\PathFinder2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="util\Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Openlist.h">
+    <ClInclude Include="src\a_star.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\PathFinder2.cpp">
+    <ClCompile Include="src\a_star.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

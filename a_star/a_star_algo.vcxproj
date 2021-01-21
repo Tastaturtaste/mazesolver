@@ -23,6 +23,7 @@
     <ProjectGuid>{4A7CF6C7-7F46-4BC4-A1DF-BA49D0D64272}</ProjectGuid>
     <RootNamespace>astaralgo</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <ProjectName>a_star</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -140,6 +141,8 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <EnablePREfast>true</EnablePREfast>
       <SuppressStartupBanner>false</SuppressStartupBanner>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -178,6 +181,8 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <EnablePREfast>true</EnablePREfast>
       <SuppressStartupBanner>false</SuppressStartupBanner>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -188,13 +193,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\file_to_vec_parse.h" />
-    <ClInclude Include="src\Openlist.h" />
-    <ClInclude Include="src\PathFinder2.h" />
+    <ClInclude Include="src\a_star.h" />
+    <ClInclude Include="src\util\Timer.h" />
     <ClInclude Include="util\Timer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\PathFinder2.cpp" />
+    <ClCompile Include="src\a_star.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
