@@ -10,11 +10,11 @@ def a_star(weights, start, goal, diagonal_ok):
     #    raise ValueError("Minimum cost to move must be 1, but got {0}".format(weights.min(axis=None)))
     
     #Ensure start is within grid
-    if(start[0] < 0 or start[1] >= weights.shape[0] or start[1] < 0 or start[1] >= weights.shape[1]):
+    if (start[0] < 0) or (start[0] >= weights.shape[0]) or (start[1] < 0) or (start[1] >= weights.shape[1]):
         raise ValueError("Start of ({0}) lies outside grid.".format(start))
     
     #Ensure goal is within grid
-    if(goal[0] < 0 or goal[1] >= weights.shape[0] or goal[1] < 0 or goal[1] >= weights.shape[1]):
+    if (goal[0] < 0) or (goal[0] >= weights.shape[0]) or (goal[1] < 0) or (goal[1] >= weights.shape[1]):
         raise ValueError("Goal of ({0}) lies outside grid.".format(goal))
     
     height, width = weights.shape

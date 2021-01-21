@@ -50,9 +50,16 @@ std::ostream& operator<<(std::ostream& ostream, const std::pair<int, int>& pair)
 }
 
 template<typename T>
-double heuristic_cost(const std::pair<T,T> node_1, const std::pair<T,T> node_2)
+double heuristic_cost(const std::pair<T,T> node_1, const std::pair<T,T> node_2, bool diagonal_ok)
 {
-	return sqrt(std::pow(node_1.first - node_2.first, 2) + std::pow(node_1.second - node_2.second, 2));
+	const double dist1 = std::abs(node_1.first - node_2.first);
+	const double dist2 = std::abs(node_1.second - node_2.second);
+	if (diagonal_ok) {
+		return std::sqrt(dist1*dist1 + dist2*dist2);
+	}
+	else {
+		return dist1 + dist2;
+	}
 }
 
 std::pair<int, int> pos_from_index(int index, int width) {
@@ -115,58 +122,58 @@ std::tuple<std::vector<index_t>, std::unordered_set<index_t>> get_path(int width
 	Node const* const start_node = &(node_map[start_index]);
 
 	node_map[start_index].sure_cost = 0.0;
-	node_map[start_index].heuristic_cost = heuristic_cost(start_pos, exit_pos);
+	node_map[start_index].heuristic_cost = heuristic_cost(start_pos, exit_pos,diagonal_ok);
 	node_map[start_index].combined_cost = start_node->sure_cost + start_node->heuristic_cost;
+
+	constexpr double diag_cost_mod = 1.414213562; // sqrt(2)
 	
 	auto cmp = [](Node const* l, Node const* r) { return *l < *r; };
 	std::set<Node const*, decltype(cmp)> openlist(std::move(cmp));
-	std::vector<bool> closedlist(costs.size(),false);
-	
+	std::unordered_set<index_t> closedlist{};
+	closedlist.reserve(costs.size() / 2);
 	openlist.insert( &(node_map[start_index]) );
-	{
-		while (	!openlist.empty() ){
-			Node const* const current = *(openlist.begin());
-			if (current == exit_node) {
-				// call with exit and start switched to get correct direction back
-				auto set = vec_to_set(closedlist);
-				return { construct_path(exit_node, start_node, width*height/4) , vec_to_set(closedlist) };
-			}
-			openlist.erase(openlist.begin());
-			closedlist[current->index] = true;
-			auto [cur_x, cur_y] = pos_from_index(current->index, width);
-			for (int dx = -1; dx <= 1; ++dx) {
-				for (int dy = -1; dy <= 1; ++dy) {
-					// skip diagonal entrys if diagonals are not viable
-					if (!diagonal_ok && (std::abs(dx) == std::abs(dy)))
-						continue;
-					// skip if node would go outside rectangle
-					auto x = cur_x + dx; auto y = cur_y + dy;
-					if (static_cast<uint32_t>(x) >= width || static_cast<uint32_t>(x) >= height ) // Project negative values to big positives so only one comparison per value needed
-						continue;
-					Node& neighbor = node_map.at(current->index + dx + dy*width);
-					// skip previously visited nodes, including the current node
-					if (closedlist[neighbor.index])
-						continue;
-					// skip if node is not passable
-					if (costs[neighbor.index] < 0.0)
-						continue;
-					double new_sure_cost = current->sure_cost + costs[neighbor.index];
-					if (new_sure_cost < neighbor.sure_cost) {
-						// Make sure to not invalidate the ordered set
-						if (auto it = openlist.find(&neighbor); it != openlist.end())
-							openlist.erase(it);
-						neighbor.sure_cost = new_sure_cost;
-						neighbor.heuristic_cost = heuristic_cost({x,y}, exit_pos);
-						// combined cost for ordering of the open set
-						neighbor.combined_cost = neighbor.sure_cost + neighbor.heuristic_cost;
-						neighbor.parent = current;
-						openlist.insert(&neighbor);
-					}
+	while (	!openlist.empty() ){
+		Node const* const current = *(openlist.begin());
+		if (current == exit_node) {
+			// call with exit and start switched to get correct direction back
+			return { construct_path(exit_node, start_node, width*height/4) , closedlist };
+		}
+		openlist.erase(openlist.begin());
+		closedlist.insert(current->index);
+		auto [cur_x, cur_y] = pos_from_index(current->index, width);
+		for (int dx = -1; dx <= 1; ++dx) {
+			for (int dy = -1; dy <= 1; ++dy) {
+				// skip diagonal entrys if diagonals are not viable
+				if (!diagonal_ok && (std::abs(dx) == std::abs(dy)))
+					continue;
+				// skip if node would go outside rectangle
+				auto x = cur_x + dx; auto y = cur_y + dy;
+				if (static_cast<uint32_t>(x) >= width || static_cast<uint32_t>(y) >= height ) // Project negative values to big positives so only one comparison per value needed
+					continue;
+				Node& neighbor = node_map.at(current->index + dx + dy*width);
+				// skip previously visited nodes, including the current node
+				if (closedlist.find(neighbor.index) != closedlist.end())
+					continue;
+				// skip if node is not passable
+				if (costs[neighbor.index] < 0.0)
+					continue;
+				const bool diagonal_move = dx * dy != 0; // should be inlined
+				double new_sure_cost = current->sure_cost + (diagonal_move ? diag_cost_mod : 1.0) * costs[neighbor.index];
+				if (new_sure_cost < neighbor.sure_cost) {
+					// Make sure to not invalidate the ordered set
+					if (auto it = openlist.find(&neighbor); it != openlist.end())
+						openlist.erase(it);
+					neighbor.sure_cost = new_sure_cost;
+					neighbor.heuristic_cost = heuristic_cost({x,y}, exit_pos, diagonal_ok);
+					// combined cost for ordering of the open set
+					neighbor.combined_cost = neighbor.sure_cost + neighbor.heuristic_cost;
+					neighbor.parent = current;
+					openlist.insert(&neighbor);
 				}
 			}
 		}
 	}
-	return { {-1}, vec_to_set(closedlist) };
+	return { {-1}, closedlist };
 }
 
 PYBIND11_MODULE(a_star, m)

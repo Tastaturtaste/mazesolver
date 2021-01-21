@@ -3,11 +3,11 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>d456ad67-93fc-4b3e-98ea-7e5fab32a816</ProjectGuid>
-    <ProjectHome>.</ProjectHome>
+    <ProjectHome>a_star\</ProjectHome>
     <StartupFile>mazesolve.py</StartupFile>
     <SearchPath>
     </SearchPath>
-    <WorkingDirectory>.</WorkingDirectory>
+    <WorkingDirectory>$(ProjectDir)</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>mazesolve</Name>
     <RootNamespace>mazesolve</RootNamespace>
@@ -18,6 +18,7 @@
     <IsWindowsApplication>False</IsWindowsApplication>
     <InterpreterPath>
     </InterpreterPath>
+    <CommandLineArguments>mazes/maze_small.png</CommandLineArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -27,10 +28,6 @@
     <DebugSymbols>true</DebugSymbols>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="mazesolve.py" />
-    <Compile Include="py_star.py" />
-  </ItemGroup>
   <ItemGroup>
     <Interpreter Include="..\venv\">
       <Id>venv</Id>
@@ -46,11 +43,15 @@
     <InterpreterReference Include="Global|PythonCore|3.9" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\a_star_algo\a_star_algo.vcxproj">
+    <ProjectReference Include="a_star_algo.vcxproj">
       <Name>a_star</Name>
       <Project>{4a7cf6c7-7f46-4bc4-a1df-ba49d0d64272}</Project>
       <Private>True</Private>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="mazesolve.py" />
+    <Compile Include="py_star.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
