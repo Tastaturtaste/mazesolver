@@ -17,7 +17,7 @@ def load_maze(maze_path):
 def solve_maze(maze, diagonal_ok = True):
 
     grid = cv2.cvtColor(maze, cv2.COLOR_BGR2GRAY).astype(np.int)
-    grid[grid == 0] = -1#np.iinfo(np.int32).max
+    grid[grid == 0] = -1
     grid[grid == 255] = 1
 
     # start is the first white block in the top row

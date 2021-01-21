@@ -21,8 +21,8 @@ def a_star(weights, start, goal, diagonal_ok):
     start_index = int(np.ravel_multi_index(start, (height, width)))
     goal_index = int(np.ravel_multi_index(goal, (height, width)))
     weights = weights.flatten()
-    weights[start_index] = 0.0;
-    weights[goal_index] = 0.0;
+    weights[start_index] = 0.0
+    weights[goal_index] = 0.0
     path, tried_pixels = invoke_pathfinder(width,height,weights,start_index,goal_index,diagonal_ok)
     return (path,tried_pixels)
 

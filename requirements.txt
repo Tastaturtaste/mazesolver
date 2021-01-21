@@ -1,0 +1,4 @@
+a-star @ file:///I:/dev/a_star/a_star
+numpy==1.19.5
+opencv-python==4.5.1.48
+pybind11==2.6.1
