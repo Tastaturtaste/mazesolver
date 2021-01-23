@@ -1,6 +1,6 @@
 **/*.vs
 **/__*__/
-**/Solutions/*.png
+**/*_solution.png
 **/build/
 **/dist/
 **/*.spec

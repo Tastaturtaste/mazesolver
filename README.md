@@ -1,7 +1,11 @@
 # A*-Mazesolver
-Example project using the a_star extension module.
+Example project using the a_star extension module, comparing its performance to a pure python implementation.
 
 ## Setup
+### Get repository
+Since submodule is used to include the functionality of the A*-Extension the additional parameter ```--recurse-submodules``` has to be used while cloning the repository:  
+```git clone --recurse-submodules https://github.com/Tastaturtaste/mazesolver.git```
+
 ### Optional: Setup virtual environment
 In the root directory of this project run ```python -m venv venv-name``` where ```venv-name``` can be any name you like.  
 Activate it using ```venv-name/scripts/activate```.  
@@ -14,12 +18,16 @@ If you did not have the correct compiler installed at this stage and the provide
 
 ## Usage
 
-To solve a maze run ```mazesolve.py path/to/maze.png```.
+To solve a maze run ```python mazesolve.py path/to/maze.png```.
 
-```mazesolve.py``` reads in the three color channels of the picture. The start position for the maze should be marked in red, the exit in blue. Then the picture is converted to gray-scale. Per default grey values of 0 are considered unpassable, values above are considered passable. Grey values that are passable are translated to pathing costs.  
-```mazesolve.py``` calls the function ```a_star```, which expects a 2D-numpyarray of weights, start and goal coordinates as tuples and a bool-flag which can enable diagonal pathing. The function does necessery conversions to call the c++ function, calls into the c++-code and returns a tuple of two numpy arrays which contain row- and column indices.  
-The result is drawn into the maze and saved to a file.  
-The behaviour can be influenced via the commandline arguments passed to ```mazesolve.py```.  
-These can be explored with ```python mazesolve.py -h```
+```mazesolve.py``` reads in the three color channels of the picture. The start position for the maze should be marked in red, the exit in blue. Then the picture is converted to gray-scale. Per default grey values of 0 (completely black) are considered unpassable, values above (lighter color) are considered passable. Grey values that are passable are translated to pathing costs.  
+```mazesolve.py``` then calls and times the respective functions for the A*-Algorithm of both the pure python and the c++ module and prints the runtime to the console. 
+The resulting path as well as the explored area is drawn into the maze and saved to a file for both modules seperately.  
+The behaviour can be influenced via the commandline arguments passed to ```mazesolve.py```. 
+These can be explored with ```python mazesolve.py -h```  
 
+## Comparison
+Depending on the size of the maze the c++ module is about 10 to 30 time faster than the pure python module. This gain gets smaller the larger the maze is. 
+
+## On Errors
 If an import error gets triggered while using the script, make sure the package is correctly installed and you have the correct ```vc++ redistributable``` on the system. Most people should have it already installed. If not or you are unsure you can download it here: https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads
